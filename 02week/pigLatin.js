@@ -38,7 +38,7 @@ function pigLatin(word) {
     };
   finalPhrase.push(newWord);
   };
-  finalPhrase.join(' ');
+  return finalPhrase.join(' ');
 };
 };
 
