@@ -47,6 +47,10 @@ function getPrompt() {
   rl.question('word ', (answer) => {
     console.log( pigLatin(answer) );
     getPrompt();
+    function empty(){
+      finalPhrase.length = 0;
+    };
+    empty(); 
   });
 };
 
