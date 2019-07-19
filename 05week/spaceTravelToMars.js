@@ -20,6 +20,7 @@ class CrewMember {
   enterShip(shipName){
     this.ship = shipName;
     shipName.crew.push(this);
+    console.log(shipName)
   }
 };
 
@@ -36,6 +37,7 @@ class Ship {
      } else {
        return this.ability;
      }
+    }
 };
 
 
