@@ -10,26 +10,29 @@ const rl = readline.createInterface({
 
 class Checker {
   constructor (color){
-    if(color === 'white'){
-      this.symbol = 'w';
-      this.name = 'white';
+    if(color === 'red'){
+      this.symbol = '✪';
+      this.name = 'red';
+      this.turn = 'redTurn';
     } else {
-      this.symbol = 'b';
+      this.symbol = '☯';
       this.name = 'black';
+      this.turn = 'blackTurn';
     }
   }
 }
 
-const whiteChecker = new Checker('white');
+const redChecker = new Checker('red');
 const blackChecker = new Checker('black');
 
-function playerTurn(){
-  if (playerTurn === 'white'){
-    playerTurn = 'black'
-  } else {
-    playerTurn = 'white';
-  }
-}
+//I don't need this because my Checker class has an object value of turn
+// function playerTurn(){
+//   if (playerTurn === 'red'){
+//     playerTurn = 'black'
+//   } else {
+//     playerTurn = 'red';
+//   }
+// }
 
 class Board {
   constructor() {
@@ -71,57 +74,94 @@ class Board {
     }
     console.log(string);
   }
-  setPieces() {
-    let whitePieces = [
-      [0, 1],
-      [0, 3],
-      [0, 5],
-      [0, 7],
-      [1, 0],
-      [1, 2],
-      [1, 4],
-      [1, 6],
-      [2, 1],
-      [2, 3],
-      [2, 5],
-      [2, 7]
-    ];
 
-    for (let i = 0; i < 12; i ++){
-      //the grid is made up of 8 rows that are arrays. the columns are the null indexes pushed into the arrays of rows. I have 12 white pieces that I'm going to push to the grid array, changing the index there from null to the value that is my whitePiece. Loop through each array within the array of whitePieces. the first index of each array is my rows, and the second index of each array within the array is my column value
-      let whiteRow = whitePieces[i][0]
-      let whiteColumn = whitePieces[i][1]
-
-      this.grid[whiteRow][whiteColumn] = whiteChecker;
-      this.checkers.push(whiteChecker);
-      
+  setPieces(){
+    for(let r = 0; r < 8; r ++){
+      if(r < 3){
+        for( let c = 0; c < 8; c ++){
+          if ((c % 2 !== 0) && (r % 2 == 0)){
+            this.grid[r][c] = redChecker;
+            this.checkers.push(this.redChecker);
+          } else if ((c % 2 == 0) && (r % 2 !== 0)){
+            this.grid[r][c] = redChecker;
+            this.checkers.push(this.redChecker);
+            }
+          }
+      } else if (r > 4){
+          for( let c = 0; c < 8; c ++){
+            if ((c % 2 !== 0) && (r % 2 == 0)){
+              this.grid[r][c] = blackChecker;
+              this.checkers.push(this.blackChecker);
+            } else if ((c % 2 == 0) && (r % 2 !== 0)){
+              this.grid[r][c] = blackChecker;
+              this.checkers.push(this.blackChecker);
+            }
+          }
+        }
     }
-
-    let blackPieces = [
-      [5, 0],
-      [5, 2],
-      [5, 4],
-      [5, 6],
-      [6, 1],
-      [6, 3],
-      [6, 5],
-      [6, 7],
-      [7, 0],
-      [7, 2],
-      [7, 4],
-      [7, 6]
-    ];
-
-    for(let x = 0; x < 12; x ++) {
-      let blackRow = blackPieces[x][0]
-      let blackColumn = blackPieces[x][1]
-
-      this.grid[blackRow][blackColumn] = blackChecker;
-      this.checkers.push(blackChecker);
-    }
-
   }
 }
+
+
+  // setPieces() {
+  //   let redPieces = [
+  //     [0, 1],
+  //     [0, 3],
+  //     [0, 5],
+  //     [0, 7],
+  //     [1, 0],
+  //     [1, 2],
+  //     [1, 4],
+  //     [1, 6],
+  //     [2, 1],
+  //     [2, 3],
+  //     [2, 5],
+  //     [2, 7]
+  //   ];
+
+  //   for (let i = 0; i < 12; i ++){
+  //     //the grid is made up of 8 rows that are arrays. the columns are the null indexes pushed into the arrays of rows. I have 12 red pieces that I'm going to push to the grid array, changing the index there from null to the value that is my redPiece. Loop through each array within the array of redPieces. the first index of each array is my rows, and the second index of each array within the array is my column value
+  //     let redRow = redPieces[i][0]
+  //     let redColumn = redPieces[i][1]
+
+  //     this.grid[redRow][redColumn] = redChecker;
+  //     this.checkers.push(redChecker);
+      
+  //   }
+
+  //   let blackPieces = [
+  //     [5, 0],
+  //     [5, 2],
+  //     [5, 4],
+  //     [5, 6],
+  //     [6, 1],
+  //     [6, 3],
+  //     [6, 5],
+  //     [6, 7],
+  //     [7, 0],
+  //     [7, 2],
+  //     [7, 4],
+  //     [7, 6]
+  //   ];
+
+  //   for(let x = 0; x < 12; x ++) {
+  //     let blackRow = blackPieces[x][0]
+  //     let blackColumn = blackPieces[x][1]
+
+  //     this.grid[blackRow][blackColumn] = blackChecker;
+  //     this.checkers.push(blackChecker);
+  //   }
+
+  // }
+
+  // moveChecker(whichPiece, toWhere){
+  //   if(playerTurn === 'red'){
+  //     redChecker = whichPiece.split('')
+  //   } else {
+  //     blackChecker = whichPiece.split('')
+  //   }
+  // }
+
 
 class Game {
   constructor() {
@@ -132,10 +172,13 @@ class Game {
     this.board.setPieces();
   }
   moveChecker(whichPiece, toWhere){
-    if(playerTurn === 'white'){
-      whiteChecker = whichPiece.split('')
-    } else {
-      blackChecker = whichPiece.split('')
+    if(isValid(whichPiece, toWhere)){
+
+    }
+  }
+  isValid(whichPiece, toWhere){
+    if((whichPiece === this.turn)){
+
     }
   }
 }
