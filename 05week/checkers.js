@@ -25,15 +25,6 @@ class Checker {
 const redChecker = new Checker('red');
 const blackChecker = new Checker('black');
 
-//I don't need this because my Checker class has an object value of turn
-// function playerTurn(){
-//   if (playerTurn === 'red'){
-//     playerTurn = 'black'
-//   } else {
-//     playerTurn = 'red';
-//   }
-// }
-
 class Board {
   constructor() {
     this.grid = []
@@ -102,71 +93,18 @@ class Board {
   }
 }
 
+//not sure where to put this function yet, so I'm just gonna build it here
+function isJumpValid(start, end){
 
-  // setPieces() {
-  //   let redPieces = [
-  //     [0, 1],
-  //     [0, 3],
-  //     [0, 5],
-  //     [0, 7],
-  //     [1, 0],
-  //     [1, 2],
-  //     [1, 4],
-  //     [1, 6],
-  //     [2, 1],
-  //     [2, 3],
-  //     [2, 5],
-  //     [2, 7]
-  //   ];
-
-  //   for (let i = 0; i < 12; i ++){
-  //     //the grid is made up of 8 rows that are arrays. the columns are the null indexes pushed into the arrays of rows. I have 12 red pieces that I'm going to push to the grid array, changing the index there from null to the value that is my redPiece. Loop through each array within the array of redPieces. the first index of each array is my rows, and the second index of each array within the array is my column value
-  //     let redRow = redPieces[i][0]
-  //     let redColumn = redPieces[i][1]
-
-  //     this.grid[redRow][redColumn] = redChecker;
-  //     this.checkers.push(redChecker);
-      
-  //   }
-
-  //   let blackPieces = [
-  //     [5, 0],
-  //     [5, 2],
-  //     [5, 4],
-  //     [5, 6],
-  //     [6, 1],
-  //     [6, 3],
-  //     [6, 5],
-  //     [6, 7],
-  //     [7, 0],
-  //     [7, 2],
-  //     [7, 4],
-  //     [7, 6]
-  //   ];
-
-  //   for(let x = 0; x < 12; x ++) {
-  //     let blackRow = blackPieces[x][0]
-  //     let blackColumn = blackPieces[x][1]
-
-  //     this.grid[blackRow][blackColumn] = blackChecker;
-  //     this.checkers.push(blackChecker);
-  //   }
-
-  // }
-
-  // moveChecker(whichPiece, toWhere){
-  //   if(playerTurn === 'red'){
-  //     redChecker = whichPiece.split('')
-  //   } else {
-  //     blackChecker = whichPiece.split('')
-  //   }
-  // }
+}
 
 
 class Game {
   constructor() {
     this.board = new Board;
   }
+  
+
   start() {
     this.board.createGrid();
     this.board.setPieces();
@@ -174,13 +112,56 @@ class Game {
   moveChecker(whichPiece, toWhere){
     if(isValid(whichPiece, toWhere)){
 
-    }
-  }
-  isValid(whichPiece, toWhere){
-    if((whichPiece === this.turn)){
+      isSingleMove(whichPiece, toWhere) 
 
     }
   }
+
+  validInput(whichPiece, toWhere){
+
+    let start = whichPiece.split('');
+    let end = toWhere.split('');
+    let startX = start[0];
+    let startY = start[1];
+    let endX = end[0];
+    let endY = end[1];
+
+    const is07 = num => {
+      if( (startX || startY || endX || endY) >= 0 && (startX || startY || endX || endY) <= 7){
+        return true;
+      } else {
+        return false;
+      }
+    }
+    
+    const isInputOdd = coor => {
+      if(((startX + startY) || (endX + endY)) % 2 !== 0){
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    const isWhichPieceThere = check =>{
+      if(this.board.checkers)
+    }
+
+    const isToWhereEmpty = space => {
+      if(this.board.grid[endX][endY] === null){
+        return true;
+      } else {
+        return false;
+      }
+
+      //if all return true, call moveChecker function
+      if(is07 && isInputOdd && isWhichPieceThere && isToWhereEmpty){
+        this.moveChecker()
+      }
+    }
+
+  }
+
+  
 }
 
 function getPrompt() {
