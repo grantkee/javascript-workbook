@@ -7,23 +7,73 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
+function switchPlayer(){
+  if(playerTurn === blackChecker){
+    playerTurn = redChecker;
+  } else {
+    playerTurn = blackChecker;
+  }
+}
+
 
 class Checker {
   constructor (color){
     if(color === 'red'){
       this.symbol = '✪';
-      this.name = 'red';
-      this.turn = 'redTurn';
+      this.color = color;
     } else {
       this.symbol = '☯';
-      this.name = 'black';
-      this.turn = 'blackTurn';
+      this.color = color;
     }
   }
 }
 
 const redChecker = new Checker('red');
 const blackChecker = new Checker('black');
+let playerTurn = blackChecker;
+
+
+
+const is07 = (startX, startY, endX, endY) => {
+  if( (startX || startY || endX || endY) >= 0 && (startX || startY || endX || endY) <= 7){
+    return true;
+  }
+}
+
+const diagonalMove = (startX, startY, endX, endY) => {
+  if(playerTurn === blackChecker){
+    if((endX - startX === -1) && (endY - startY === 1 || endY - startY === -1)){
+      return true;
+    }
+  } else if(playerTurn === redChecker){
+    if((endX - startX === 1) && (endY - startY === 1 || endY - startY === -1)){
+      return true;
+    }
+  } else {
+    return false;
+  }
+}
+
+const isWhichPieceThere = (startX, startY) =>{
+  if( game.board.grid[startX][startY] !== null && playerTurn.symbol === game.board.grid[startX][startY].symbol ){
+    return true;
+  }
+}
+
+const isToWhereEmpty = (endX, endY) => {
+  if(game.board.grid[endX][endY] === null){
+    return true;
+  }
+}
+
+const jumpPiece = (whichPiece, toWhere) =>{
+  if(whichPiece - toWhere === -18 || whichPiece - toWhere === 18 || whichPiece - toWhere === -22 || whichPiece - toWhere === 22){
+    console.log('thiis is jumpPiece');
+    return true;
+  }
+}
+
+
 
 class Board {
   constructor() {
@@ -41,6 +91,7 @@ class Board {
       }
     }
   }
+
   viewGrid() {
     // add our column numbers
     let string = "  0 1 2 3 4 5 6 7\n";
@@ -72,30 +123,27 @@ class Board {
         for( let c = 0; c < 8; c ++){
           if ((c % 2 !== 0) && (r % 2 == 0)){
             this.grid[r][c] = redChecker;
-            this.checkers.push(this.redChecker);
+            this.checkers.push(redChecker);
           } else if ((c % 2 == 0) && (r % 2 !== 0)){
             this.grid[r][c] = redChecker;
-            this.checkers.push(this.redChecker);
+            this.checkers.push(redChecker);
             }
           }
       } else if (r > 4){
           for( let c = 0; c < 8; c ++){
             if ((c % 2 !== 0) && (r % 2 == 0)){
               this.grid[r][c] = blackChecker;
-              this.checkers.push(this.blackChecker);
+              this.checkers.push(blackChecker);
             } else if ((c % 2 == 0) && (r % 2 !== 0)){
               this.grid[r][c] = blackChecker;
-              this.checkers.push(this.blackChecker);
+              this.checkers.push(blackChecker);
             }
           }
         }
+      }
+      //do a counter for blackChecker and redCheckers within the array - filter and check values
+      console.log(this.checkers.length)
     }
-  }
-}
-
-//not sure where to put this function yet, so I'm just gonna build it here
-function isJumpValid(start, end){
-
 }
 
 
@@ -109,16 +157,8 @@ class Game {
     this.board.createGrid();
     this.board.setPieces();
   }
+
   moveChecker(whichPiece, toWhere){
-    if(isValid(whichPiece, toWhere)){
-
-      isSingleMove(whichPiece, toWhere) 
-
-    }
-  }
-
-  validInput(whichPiece, toWhere){
-
     let start = whichPiece.split('');
     let end = toWhere.split('');
     let startX = start[0];
@@ -126,45 +166,34 @@ class Game {
     let endX = end[0];
     let endY = end[1];
 
-    const is07 = num => {
-      if( (startX || startY || endX || endY) >= 0 && (startX || startY || endX || endY) <= 7){
-        return true;
+    if(is07(startX, startY, endX, endY)){
+      if (isWhichPieceThere(startX, startY)){
+        if(diagonalMove(startX, startY, endX, endY)){
+          if(isToWhereEmpty(endX, endY)) {
+            jumpPiece(whichPiece, toWhere)
+            let x = this.board.grid[whichPiece[0]][whichPiece[1]];
+            this.board.grid[whichPiece[0]][whichPiece[1]] = null;
+            this.board.grid[toWhere[0]][toWhere[1]] = x;
+            switchPlayer();
+          }
+        } else {
+            console.log('The move must be diagonal')
+          }
       } else {
-        return false;
+        console.log('The piece you are trying to move is not there');
       }
+    } else {
+      console.log ('Oops, try again')
     }
-    
-    const isInputOdd = coor => {
-      if(((startX + startY) || (endX + endY)) % 2 !== 0){
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    const isWhichPieceThere = check =>{
-      if(this.board.checkers)
-    }
-
-    const isToWhereEmpty = space => {
-      if(this.board.grid[endX][endY] === null){
-        return true;
-      } else {
-        return false;
-      }
-
-      //if all return true, call moveChecker function
-      if(is07 && isInputOdd && isWhichPieceThere && isToWhereEmpty){
-        this.moveChecker()
-      }
-    }
-
   }
-
-  
 }
 
+  
+
+
 function getPrompt() {
+  console.log('~~~~~~~~~~~~~~~~~~~');
+  console.log(`Player Turn: ${playerTurn.symbol}`)
   game.board.viewGrid();
   rl.question('which piece?: ', (whichPiece) => {
     rl.question('to where?: ', (toWhere) => {
