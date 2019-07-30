@@ -40,7 +40,7 @@ const is07 = (startX, startY, endX, endY) => {
   }
 }
 
-const diagonalMove = (startX, startY, endX, endY) => {
+const diagonalMove = (startX, startY, endX, endY, whichPiece, toWhere) => {
   if(playerTurn === blackChecker){
     if((endX - startX === -1) && (endY - startY === 1 || endY - startY === -1)){
       return true;
@@ -48,7 +48,7 @@ const diagonalMove = (startX, startY, endX, endY) => {
   } else if(playerTurn === redChecker){
     if((endX - startX === 1) && (endY - startY === 1 || endY - startY === -1)){
       return true;
-    }
+    } //this is getting a little hairy and still not working. I tried to add my jumpPiece function into my daigonalMove because the diagonalMove function is returning a falsy value when the user tries to jump. that's because the user's endX and startX is 2. this test checks for 1...
   } else {
     return false;
   }
@@ -66,10 +66,51 @@ const isToWhereEmpty = (endX, endY) => {
   }
 }
 
-const jumpPiece = (whichPiece, toWhere) =>{
-  if(whichPiece - toWhere === -18 || whichPiece - toWhere === 18 || whichPiece - toWhere === -22 || whichPiece - toWhere === 22){
-    console.log('thiis is jumpPiece');
-    return true;
+
+const jumpPiece = (startX, startY, whichPiece, toWhere) =>{
+  let jump = whichPiece - toWhere;
+  let blackUpRight = game.board.grid[startX - 1][startY + 1];
+  console.log(game.board.grid[startX - 1][startY + 1]);
+  let blackUpLeft = game.board.grid[startX - 1][startY - 1];
+  // let redDownRight = game.board.grid[startX + 1][startY + 1];
+  // let redDownLeft = game.board.grid[startX + 1][startY - 1];
+  
+  if(playerTurn === blackChecker){
+    if(jump === 18 && blackUpRight.symbol !== playerTurn.symbol && blackUpRight !== null){
+      let x = this.board.grid[whichPiece[0]][whichPiece[1]];
+      this.board.grid[whichPiece[0]][whichPiece[1]] = null;
+      blackUpRight = null;
+      this.board.grid[toWhere[0]][toWhere[1]] = x;
+      switchPlayer();
+    } else if (jump === 22 && blackUpLeft !== playerTurn.symbol && blackUpLeft !== null){
+      let x = this.board.grid[whichPiece[0]][whichPiece[1]];
+      this.board.grid[whichPiece[0]][whichPiece[1]] = null;
+      blackUpLeft = null;
+      this.board.grid[toWhere[0]][toWhere[1]] = x;
+      switchPlayer();
+    } else {
+      console.log('that is not a valid jump')
+      return false;
+    }
+  }
+
+  if(playerTurn === redChecker){
+    if(jump === -18 && redDownLeft !== playerTurn.symbol && redDownLeft !== null){
+      let x = this.board.grid[whichPiece[0]][whichPiece[1]];
+      this.board.grid[whichPiece[0]][whichPiece[1]] = null;
+      redDownLeft = null;
+      this.board.grid[toWhere[0]][toWhere[1]] = x;
+      switchPlayer();
+    } else if (jump === -22 && redDownRight !== playerTurn.symbol && redDownRight !== null){
+      let x = this.board.grid[whichPiece[0]][whichPiece[1]];
+      this.board.grid[whichPiece[0]][whichPiece[1]] = null;
+      redDownRight = null;
+      this.board.grid[toWhere[0]][toWhere[1]] = x;
+      switchPlayer();
+    } else {
+      console.log('that is not a valid jump')
+      return false;
+    }
   }
 }
 
@@ -170,15 +211,14 @@ class Game {
       if (isWhichPieceThere(startX, startY)){
         if(diagonalMove(startX, startY, endX, endY)){
           if(isToWhereEmpty(endX, endY)) {
-            jumpPiece(whichPiece, toWhere)
             let x = this.board.grid[whichPiece[0]][whichPiece[1]];
             this.board.grid[whichPiece[0]][whichPiece[1]] = null;
             this.board.grid[toWhere[0]][toWhere[1]] = x;
             switchPlayer();
           }
-        } else {
-            console.log('The move must be diagonal')
-          }
+        } else if (startX - endX == 2 || startX - endX == -2) {
+          jumpPiece(startX, startY, whichPiece, toWhere)
+        } else console.log('The move must be diagonal')
       } else {
         console.log('The piece you are trying to move is not there');
       }
