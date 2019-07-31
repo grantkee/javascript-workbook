@@ -67,54 +67,6 @@ const isToWhereEmpty = (endX, endY) => {
 }
 
 
-const jumpPiece = (startX, startY, whichPiece, toWhere) =>{
-  let jump = whichPiece - toWhere;
-  let blackUpRight = game.board.grid[startX - 1][startY + 1];
-  console.log(game.board.grid[startX - 1][startY + 1]);
-  let blackUpLeft = game.board.grid[startX - 1][startY - 1];
-  // let redDownRight = game.board.grid[startX + 1][startY + 1];
-  // let redDownLeft = game.board.grid[startX + 1][startY - 1];
-  
-  if(playerTurn === blackChecker){
-    if(jump === 18 && blackUpRight.symbol !== playerTurn.symbol && blackUpRight !== null){
-      let x = this.board.grid[whichPiece[0]][whichPiece[1]];
-      this.board.grid[whichPiece[0]][whichPiece[1]] = null;
-      blackUpRight = null;
-      this.board.grid[toWhere[0]][toWhere[1]] = x;
-      switchPlayer();
-    } else if (jump === 22 && blackUpLeft !== playerTurn.symbol && blackUpLeft !== null){
-      let x = this.board.grid[whichPiece[0]][whichPiece[1]];
-      this.board.grid[whichPiece[0]][whichPiece[1]] = null;
-      blackUpLeft = null;
-      this.board.grid[toWhere[0]][toWhere[1]] = x;
-      switchPlayer();
-    } else {
-      console.log('that is not a valid jump')
-      return false;
-    }
-  }
-
-  if(playerTurn === redChecker){
-    if(jump === -18 && redDownLeft !== playerTurn.symbol && redDownLeft !== null){
-      let x = this.board.grid[whichPiece[0]][whichPiece[1]];
-      this.board.grid[whichPiece[0]][whichPiece[1]] = null;
-      redDownLeft = null;
-      this.board.grid[toWhere[0]][toWhere[1]] = x;
-      switchPlayer();
-    } else if (jump === -22 && redDownRight !== playerTurn.symbol && redDownRight !== null){
-      let x = this.board.grid[whichPiece[0]][whichPiece[1]];
-      this.board.grid[whichPiece[0]][whichPiece[1]] = null;
-      redDownRight = null;
-      this.board.grid[toWhere[0]][toWhere[1]] = x;
-      switchPlayer();
-    } else {
-      console.log('that is not a valid jump')
-      return false;
-    }
-  }
-}
-
-
 
 class Board {
   constructor() {
@@ -185,6 +137,61 @@ class Board {
       //do a counter for blackChecker and redCheckers within the array - filter and check values
       console.log(this.checkers.length)
     }
+  jumpPiece (startX, startY, whichPiece, toWhere){
+    //I'm not sure what i'm targeting on the grid when I check blackUpRight. I want it to return a symbol, but it's returning undefined...
+    let jump = whichPiece - toWhere;
+
+    if(playerTurn.color === blackChecker.color){
+      let blackUpRight = this.grid[startX - 1][startY + 1];
+      let blackUpLeft = this.grid[startX - 1][startY - 1];
+      if(jump === 18 && this.symbol !== playerTurn.symbol && blackUpRight !== null){
+        let x = this.grid[whichPiece[0]][whichPiece[1]];
+        // console.log(typeof (startX - 1))
+        // console.log(typeof (startY + 1))
+        //realized that my whichPiece[1] is returning as a string, unlike the [0] index. I'm not sure why, but for tonight i'm just gonna parseInt() that value
+        this.grid[whichPiece[0]][whichPiece[1]] = null;
+        this.grid[whichPiece[0] - 1][parseInt(whichPiece[1]) + 1] = null;
+        this.grid[toWhere[0]][toWhere[1]] = x;
+        this.checkers.splice(this.checkers.indexOf(this.grid[startX][startY]));
+        switchPlayer();
+      } else if (jump === 22 && blackUpLeft !== playerTurn.symbol && blackUpLeft !== null){
+        let x = this.grid[whichPiece[0]][whichPiece[1]];
+        this.grid[whichPiece[0]][whichPiece[1]] = null;
+        this.grid[whichPiece[0] - 1][parseInt(whichPiece[1]) - 1] = null;
+        this.grid[toWhere[0]][toWhere[1]] = x;
+        this.checkers.splice(this.checkers.indexOf(this.grid[startX][startY]))
+        switchPlayer();
+      } else {
+        console.log('that is not a valid jump')
+        return false;
+      }
+    }
+  
+    else if (playerTurn.color === redChecker.color){  
+      let redDownRight = this.grid[startX + 1][startY + 1];
+      let redDownLeft = this.grid[startX + 1][startY - 1];
+      console.log(redDownLeft)
+      if(jump === -18 && this.symbol !== playerTurn.symbol && redDownLeft !== null){
+        let x = this.grid[whichPiece[0]][whichPiece[1]];
+        this.grid[startX][startY] = null;
+        this.grid[startX + 1][startY + 1] = null;
+        this.grid[startX + 1][startY - 1] = null;
+        this.grid[toWhere[0]][toWhere[1]] = x;
+        this.checkers.splice(this.checkers.indexOf(this.grid[startX][startY]))
+        switchPlayer();
+      } else if (jump === -22 && redDownRight !== playerTurn.symbol && redDownRight !== null){
+        let x = this.grid[whichPiece[0]][whichPiece[1]];
+        this.grid[startX][startY] = null;
+        this.grid[startX + 1][startY + 1] = null;
+        this.grid[toWhere[0]][toWhere[1]] = x;
+        this.checkers.splice(this.checkers.indexOf(this.grid[startX][startY]));
+        switchPlayer();
+      } else {
+        console.log('that is not a valid jump')
+        return false;
+      }
+    }
+  }
 }
 
 
@@ -202,8 +209,8 @@ class Game {
   moveChecker(whichPiece, toWhere){
     let start = whichPiece.split('');
     let end = toWhere.split('');
-    let startX = start[0];
-    let startY = start[1];
+    let startX = parseInt(start[0]);
+    let startY = parseInt(start[1]);
     let endX = end[0];
     let endY = end[1];
 
@@ -216,8 +223,8 @@ class Game {
             this.board.grid[toWhere[0]][toWhere[1]] = x;
             switchPlayer();
           }
-        } else if (startX - endX == 2 || startX - endX == -2) {
-          jumpPiece(startX, startY, whichPiece, toWhere)
+        } else if (startX - endX == 2 || endX - startX == 2) {
+          this.board.jumpPiece(startX, startY, whichPiece, toWhere)
         } else console.log('The move must be diagonal')
       } else {
         console.log('The piece you are trying to move is not there');
