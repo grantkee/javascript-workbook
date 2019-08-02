@@ -13,3 +13,15 @@ Code Plan: c0d3 g3wD
 //After the teams are selected, a new list will be created in the DOM with appropriate labels.
 
 //I'll use three tests for the application
+
+
+
+Adding people to players:
+    Goal:  When clicked the people are added to the Players section and removed from the People list while also getting new values of a player added to them.
+
+    Plan: 
+    1) Display an array of people that are options to pick from. Once they get picked, they disappear from the list. I'll add the function to the button once it gets clicked. 
+
+    2)The people have properties already, but they don't have player attributes yet. I'll make a people class and a player class. Once the players get chosen, that class will extend new values to them: canThrowBall, canDodgeBall, hasPaid, isHealthy, yearsExperience. Do I need to make a new array for these key values for each player?
+    
+     
