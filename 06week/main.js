@@ -49,7 +49,7 @@ const arrOfPeople = [
       id: 7,
       name: "Mia Watu",
       age: 17,
-      skillSet: "listening",
+      skillSet: "counting to 100 pretty fast",
       placeBorn: "Los Angeles, California"
     },
     {
@@ -59,6 +59,23 @@ const arrOfPeople = [
       skillSet: "pretending",
       placeBorn: "New Orleans, Louisiana"
     },
+  ]
+
+  const arrOfPlayers = [
+    {
+      canThrowBall: 'yep',
+      canDodgeBall: 'yep',
+      hasPaid: 80,
+      isHealthy: 'yep',
+      yearsExperience: 1
+    },  
+    {
+      canThrowBall: 'yep',
+      canDodgeBall: 'yep',
+      hasPaid: 80,
+      isHealthy: 'yep',
+      yearsExperience: 1
+    }
   ]
   
   const listOfPlayers = []
@@ -106,16 +123,17 @@ const arrOfPeople = [
 
   
   class Player extends People {
-    constructor(id, name, canThrowBall, canDodgeBall, hasPaid, isHealthy, yearsExperience){
-      super(id, name);
+    constructor(name, skillSet, canThrowBall, canDodgeBall, hasPaid, isHealthy, yearsExperience){
+      super(name, skillSet);
       this.canThrowBall = canThrowBall;
       this.canDodgeBall = canDodgeBall;
       this.hasPaid = hasPaid;
       this.isHealthy = isHealthy;
       this.yearsExperience = yearsExperience;
     }
-    
+    addPlayer(){}
   }
+
 
   class BlueTeammate extends Player {
     constructor(id, name, canThrowBall, canDodgeBall, hasPaid, isHealthy, yearsExperience, color, mascot){
@@ -133,23 +151,25 @@ const arrOfPeople = [
     }
   }
   
-  // const listPeopleChoices = () => {
-  //   const listElement = document.getElementById('people')
-  //   arrOfPeople.map(person => {
-  //     const li = document.createElement("li")
-  //     const button = document.createElement("button")
-  //     button.innerHTML = "Make Player"
-  //     button.addEventListener('click', function() {makePlayer(person.id)} )
-  //     li.appendChild(button)
-  //     li.appendChild(document.createTextNode(person.name + " - " + person.skillSet))
-  //     listElement.append(li)
-  //   })
-  // }
+  const listPeopleChoices = () => {
+    const listElement = document.getElementById('people')
+    arrOfPeople.map(person => {
+      const li = document.createElement("li")
+      const button = document.createElement("button")
+      button.innerHTML = "Make Player"
+      button.addEventListener('click', function() {makePlayer(person.id)} )
+      li.appendChild(button)
+      li.appendChild(document.createTextNode(person.name + " - " + person.skillSet))
+      listElement.append(li)
+    })
+  }
 
 
 
 const addPlayer = () => {
-  console.log('clicked')
+  console.log(arrOfPlayers);
+  let newPlayer = new Player(arrOfPlayers.canThrowBall);
+  console.log(newPlayer);
 }
 
 
@@ -160,6 +180,35 @@ const addPlayer = () => {
     console.log(`li ${id} was clicked!`)
   }
 
+//delete these two functions once you get it into the Person class
+  const     getPeople = () =>{
+    let output = `<h2>People</h2>`
+    arrOfPeople.forEach((function(user){
+        output += `
+            <ul>
+                <li>${user.name}</li>
+                <li>${user.age}</li>
+                <li>${user.skillSet}</li>
+                <li>${user.placeBorn}</li>
+                <button onclick="addPlayer()">Add Player</button>
+                <br> 
+                <br>
+            </ul>
+        `
+      }))
+      let button = document.getElementById('getPeopleButton')
+      button.parentNode.removeChild(button);
+      document.getElementById('people').innerHTML =  '<button id = "hidePeopleButton" onclick="hidePeople()">Hide List</button>' + output;
+  }
+  
+  const hidePeople = () =>{
+    let output = `
+      <h4>List Of People</h4>
+      <ul id="people"></ul>
+      <button id = 'getPeopleButton' onclick="getPeople()">Get People</button>
+      `
+    document.getElementById('listOfPeople').innerHTML = output;
+  }
 
 
 

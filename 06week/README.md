@@ -22,6 +22,6 @@ Adding people to players:
     Plan: 
     1) Display an array of people that are options to pick from. Once they get picked, they disappear from the list. I'll add the function to the button once it gets clicked. 
 
-    2)The people have properties already, but they don't have player attributes yet. I'll make a people class and a player class. Once the players get chosen, that class will extend new values to them: canThrowBall, canDodgeBall, hasPaid, isHealthy, yearsExperience. Do I need to make a new array for these key values for each player?
+    2) The people have properties already, but they don't have player attributes yet. I'll make a people class and a player class. Once the players get chosen, that class will extend new values to them: canThrowBall, canDodgeBall, hasPaid, isHealthy, yearsExperience. Do I need to make a new array for these key values for each player? Or should I make these variables for the user to input?
     
-     
+    3) 
