@@ -1,4 +1,4 @@
-DODGE BALL: Objects and Classes Checkpoint 2
+DODGEBALL: Objects and Classes Checkpoint 2
 
 Code Plan: c0d3 g3wD
 
