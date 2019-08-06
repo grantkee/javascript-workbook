@@ -64,7 +64,6 @@ const arrOfPeople = [
   const arrOfPlayers = [
     {
       //should I use the id tag to match player properties with people objects?
-      id: 1,
       canThrowBall: 'yep',
       canDodgeBall: 'barely',
       hasPaid: 80,
@@ -72,13 +71,54 @@ const arrOfPeople = [
       yearsExperience: 1
     },  
     {
-      id: 2,
       canThrowBall: 'nope',
       canDodgeBall: 'yep',
       hasPaid: 80,
       isHealthy: 'yep',
-      yearsExperience: 1
-    }
+      yearsExperience: 21
+    },
+    {
+      canThrowBall: 'nope',
+      canDodgeBall: 'yep',
+      hasPaid: 180,
+      isHealthy: 'yep',
+      yearsExperience: 11
+    },
+    {
+      canThrowBall: 'sorta',
+      canDodgeBall: 'not really',
+      hasPaid: 30,
+      isHealthy: 'sure',
+      yearsExperience: 3
+    },
+    {
+      canThrowBall: 'nope',
+      canDodgeBall: 'nope',
+      hasPaid: 80,
+      isHealthy: 'eh',
+      yearsExperience: 0
+    },
+    {
+      canThrowBall: 'yep',
+      canDodgeBall: 'nope',
+      hasPaid: 80,
+      isHealthy: 'yep',
+      yearsExperience: 13
+    },
+    {
+      canThrowBall: 'yep',
+      canDodgeBall: 'yep',
+      hasPaid: 80,
+      isHealthy: 'depends',
+      yearsExperience: 9
+    },
+    {
+      canThrowBall: 'definitely',
+      canDodgeBall: 'yep',
+      hasPaid: 1000,
+      isHealthy: 'good enough',
+      yearsExperience: 2
+    },
   ]
   
   const listOfPlayers = []
@@ -131,7 +171,7 @@ const arrOfPeople = [
 
   
   class Player extends People {
-    constructor(name, skillSet, canThrowBall, canDodgeBall, hasPaid, isHealthy, yearsExperience){
+    constructor(canThrowBall, canDodgeBall, hasPaid, isHealthy, yearsExperience, name, skillSet){
       super(name, skillSet);
       this.canThrowBall = canThrowBall;
       this.canDodgeBall = canDodgeBall;
@@ -178,11 +218,10 @@ const arrOfPeople = [
       return candidate.id === id;
     });
 
-    let newPlayer = new Player (arrOfPeople.filter(player => {
-      return player.id === id;
-    }));
+    let newPlayer = new Player (`${arrOfPlayers[id - 1].canThrowBall}`, `${arrOfPlayers[id - 1].canDodgeBall}`, `${arrOfPlayers[id - 1].hasPaid}`, `${arrOfPlayers[id - 1].isHealthy}`, `${arrOfPlayers[id - 1].yearsExperience}`)
 
-    console.log(`new player: ${newPlayer}`)
+
+    console.log(`new player: ${newPlayer.canThrowBall}, ${newPlayer.canDodgeBall}, ${newPlayer.hasPaid}, ${newPlayer.isHealthy}, ${newPlayer.yearsExperience}`)
 
     listOfPlayers.push(player);
     console.log(listOfPlayers);
@@ -193,36 +232,39 @@ const arrOfPeople = [
       const redButton = document.createElement("button");
       const blueButton = document.createElement("button");
 
-      playerList.id = `element${player.name}`
+      playerList.id = `element${id}`
+      console.log('element id ' + playerList.id)
 
       blueButton.innerHTML = 'Blue Team';
       blueButton.id = 'teamButton';
-      blueButton.addEventListener('click', function () {selectBlueTeam(player.name)});
+      blueButton.addEventListener('click', function () {selectBlueTeam(name, id, player)});
 
       redButton.innerHTML = 'Red Team';
       blueButton.id = 'teamButton';
-      redButton.addEventListener('click', function () {selectRedTeam(player.name)})
+      redButton.addEventListener('click', function () {selectRedTeam(id, name, player)});
 
-      playerList.appendChild(document.createTextNode(`${name}`))
+      playerList.appendChild(document.createTextNode(`${name}`));
       playerList.appendChild(redButton);
       playerList.appendChild(blueButton);
       playerElement.append(playerList);
     })
   }
 
-  const selectBlueTeam = (player) =>{
-    let selectedPlayer = document.getElementById(`element${player}`);
+  const selectBlueTeam = (name, id, player) =>{
+    let selectedPlayer = document.getElementById(`element${id}`);
+    console.log('selected player ' + selectedPlayer)
+    console.log('selected player ' + player)
     selectedPlayer.parentNode.removeChild(selectedPlayer);
 
     let teamPlayers = document.getElementById('blueTeam');
     const newBluePlayer = listOfPlayers.filter(teammate => {
-      console.log(teammate.name === player)
-      return teammate.name === player;
-    })
+      console.log(teammate.name === name)
+      return teammate.name === name;
+    });
 
     listOfPlayers.splice((listOfPlayers.indexOf(newBluePlayer)),1)
-    console.log(newBluePlayer);
-    console.log(listOfPlayers);
+    console.log('spliced object' + newBluePlayer);
+    console.log('list: ' + listOfPlayers);
 
     const teamRoster = document.getElementById('blueTeam');
     const newLI = document.createElement('li');
