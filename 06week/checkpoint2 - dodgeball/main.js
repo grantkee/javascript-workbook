@@ -63,7 +63,6 @@ const arrOfPeople = [
 
   const arrOfPlayers = [
     {
-      //should I use the id tag to match player properties with people objects?
       canThrowBall: 'yep',
       canDodgeBall: 'barely',
       hasPaid: 80,
@@ -219,7 +218,7 @@ const arrOfPeople = [
       return candidate.id === id;
     });
 
-    let newPlayer = new Player (`${arrOfPlayers[id - 1].canThrowBall}, ${arrOfPlayers[id - 1].canDodgeBall}, ${arrOfPlayers[id - 1].hasPaid}, ${arrOfPlayers[id - 1].isHealthy}, ${arrOfPlayers[id - 1].yearsExperience}, ${arrOfPeople[id - 1].name}, ${arrOfPeople[id - 1].skillSet}, ${arrOfPeople[id - 1].id}`);
+    newPlayer = new Player (`${arrOfPlayers[id - 1].canThrowBall}, ${arrOfPlayers[id - 1].canDodgeBall}, ${arrOfPlayers[id - 1].hasPaid}, ${arrOfPlayers[id - 1].isHealthy}, ${arrOfPlayers[id - 1].yearsExperience}, ${arrOfPeople[id - 1].name}, ${arrOfPeople[id - 1].skillSet}, ${arrOfPeople[id - 1].id}`);
 
 
     console.log(`new player: ${newPlayer.canThrowBall}, ${newPlayer.canDodgeBall}, ${newPlayer.hasPaid}, ${newPlayer.isHealthy}, ${newPlayer.yearsExperience}`);
