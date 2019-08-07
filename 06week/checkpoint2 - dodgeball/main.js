@@ -138,41 +138,41 @@ const arrOfPeople = [
       this.placeBorn = placeBorn;
     }
     //I had getPeople() and hidePeople() as const outside of the class. I can't get them to work inside the class though
-    getPeople = () =>{
-      console.log('hi')
-      let output = `<h2>People</h2>`
-      arrOfPeople.forEach((function(user){
-          output += `
-              <ul>
-                  <li>${user.name}</li>
-                  <li>${user.age}</li>
-                  <li>${user.skillSet}</li>
-                  <li>${user.placeBorn}</li>
-                  <button onclick="addPlayer()">Add Player</button>
-                  <br> 
-                  <br>
-              </ul>
-          `
-        }))
-        let button = document.getElementById('getPeopleButton')
-        button.parentNode.removeChild(button);
-        document.getElementById('people').innerHTML =  '<button id = "hidePeopleButton" onclick="hidePeople()">Hide List</button>' + output;
-    }
+    // getPeople = () =>{
+    //   console.log('hi')
+    //   let output = `<h2>People</h2>`
+    //   arrOfPeople.forEach((function(user){
+    //       output += `
+    //           <ul>
+    //               <li>${user.name}</li>
+    //               <li>${user.age}</li>
+    //               <li>${user.skillSet}</li>
+    //               <li>${user.placeBorn}</li>
+    //               <button onclick="addPlayer()">Add Player</button>
+    //               <br> 
+    //               <br>
+    //           </ul>
+    //       `
+    //     }))
+    //     let button = document.getElementById('getPeopleButton')
+    //     button.parentNode.removeChild(button);
+    //     document.getElementById('people').innerHTML =  '<button id = "hidePeopleButton" onclick="hidePeople()">Hide List</button>' + output;
+    // }
     
-    hidePeople = () =>{
-      let output = `
-        <h4>List Of People</h4>
-        <ul id="people"></ul>
-        <button id = 'getPeopleButton' onclick="getPeople()">Get People</button>
-        `
-      document.getElementById('listOfPeople').innerHTML = output;
-    }
+    // hidePeople = () =>{
+    //   let output = `
+    //     <h4>List Of People</h4>
+    //     <ul id="people"></ul>
+    //     <button id = 'getPeopleButton' onclick="getPeople()">Get People</button>
+    //     `
+    //   document.getElementById('listOfPeople').innerHTML = output;
+    // }
   }
 
   
   class Player extends People {
-    constructor(canThrowBall, canDodgeBall, hasPaid, isHealthy, yearsExperience, name, skillSet){
-      super(name, skillSet);
+    constructor(canThrowBall, canDodgeBall, hasPaid, isHealthy, yearsExperience, name, skillSet, id){
+      super(name, skillSet, id);
       this.canThrowBall = canThrowBall;
       this.canDodgeBall = canDodgeBall;
       this.hasPaid = hasPaid;
@@ -204,7 +204,7 @@ const arrOfPeople = [
       const li = document.createElement("li")
       const button = document.createElement("button")
       button.innerHTML = "Make Player";
-      button.addEventListener('click', function() {makePlayer(person.id, person.name)} );
+      button.addEventListener('click', function() {makePlayer(person, person.id, person.name)} );
       li.appendChild(button);
       li.appendChild(document.createTextNode(person.name + " - " + person.skillSet));
       listElement.append(li);
@@ -212,19 +212,20 @@ const arrOfPeople = [
   }
 
   
-  const makePlayer = (id, name) => {
+  const makePlayer = (person, id, name) => {
     console.log(`new player: ${name}`)
+    console.log('person parameter: ' + person)
     const player = arrOfPeople.filter(candidate => {
       return candidate.id === id;
     });
 
-    let newPlayer = new Player (`${arrOfPlayers[id - 1].canThrowBall}`, `${arrOfPlayers[id - 1].canDodgeBall}`, `${arrOfPlayers[id - 1].hasPaid}`, `${arrOfPlayers[id - 1].isHealthy}`, `${arrOfPlayers[id - 1].yearsExperience}`)
+    let newPlayer = new Player (`${arrOfPlayers[id - 1].canThrowBall}, ${arrOfPlayers[id - 1].canDodgeBall}, ${arrOfPlayers[id - 1].hasPaid}, ${arrOfPlayers[id - 1].isHealthy}, ${arrOfPlayers[id - 1].yearsExperience}, ${arrOfPeople[id - 1].name}, ${arrOfPeople[id - 1].skillSet}, ${arrOfPeople[id - 1].id}`);
 
 
-    console.log(`new player: ${newPlayer.canThrowBall}, ${newPlayer.canDodgeBall}, ${newPlayer.hasPaid}, ${newPlayer.isHealthy}, ${newPlayer.yearsExperience}`)
+    console.log(`new player: ${newPlayer.canThrowBall}, ${newPlayer.canDodgeBall}, ${newPlayer.hasPaid}, ${newPlayer.isHealthy}, ${newPlayer.yearsExperience}`);
 
-    listOfPlayers.push(player);
-    console.log(listOfPlayers);
+    listOfPlayers.push(newPlayer);
+    console.log('list of players' + listOfPlayers[0].name);
 
     const playerElement = document.getElementById("players");
     listOfPlayers.map(player => {
@@ -241,7 +242,7 @@ const arrOfPeople = [
 
       redButton.innerHTML = 'Red Team';
       blueButton.id = 'teamButton';
-      redButton.addEventListener('click', function () {selectRedTeam(id, name, player)});
+      redButton.addEventListener('click', function () {selectRedTeam(name, id, player)});
 
       playerList.appendChild(document.createTextNode(`${name}`));
       playerList.appendChild(redButton);
@@ -251,33 +252,49 @@ const arrOfPeople = [
   }
 
   const selectBlueTeam = (name, id, player) =>{
-    let selectedPlayer = document.getElementById(`element${id}`);
-    console.log('selected player ' + selectedPlayer)
-    console.log('selected player ' + player)
-    selectedPlayer.parentNode.removeChild(selectedPlayer);
-
+    
     let teamPlayers = document.getElementById('blueTeam');
-    const newBluePlayer = listOfPlayers.filter(teammate => {
-      console.log(teammate.name === name)
-      return teammate.name === name;
-    });
-
-    listOfPlayers.splice((listOfPlayers.indexOf(newBluePlayer)),1)
-    console.log('spliced object' + newBluePlayer);
-    console.log('list: ' + listOfPlayers);
-
-    const teamRoster = document.getElementById('blueTeam');
-    const newLI = document.createElement('li');
-    teamRoster.innerHTML = newBluePlayer;
-
-    let teamMate = new BlueTeammate ('blue', 'turtles');
-
+    console.log(listOfPlayers)
+    let newBluePlayer = listOfPlayers[id - 1].name;
+    console.log('selected player ' + typeof newBluePlayer)
+    console.log('selected player ' + player)
+    
+      
+      listOfPlayers.splice((listOfPlayers.indexOf(newBluePlayer)),1)
+      console.log('spliced object' + newBluePlayer);
+      console.log('list: ' + listOfPlayers);
+      
+      const teamRoster = document.getElementById('blueTeam');
+      const newLI = document.createElement('li');
+      teamRoster.innerHTML = name;
+      
+      let teamMate = new BlueTeammate ('blue', 'turtles');
+      
+      let selectedPlayer = document.getElementById(`element${id}`);
+      selectedPlayer.parentNode.removeChild(selectedPlayer);
 
   }
 
-  const selectRedTeam = (player) =>{
-    let teamMember = document.getElementById(`element${player}`);
-    teamMember.parentNode.removeChild(teamMember);
+  const selectRedTeam = (name, id, player) =>{
+    let teamPlayers = document.getElementById('redTeam');
+    console.log(listOfPlayers[0])
+    let newRedPlayer = listOfPlayers[id - 1].name;
+    console.log('selected player ' + typeof newRedPlayer)
+    console.log('selected player ' + player)
+    
+      
+      listOfPlayers.splice((listOfPlayers.indexOf(newRedPlayer)),1);
+      console.log('spliced object' + newRedPlayer);
+      console.log('list: ' + listOfPlayers);
+      
+      const teamRoster = document.getElementById('redTeam');
+      const newLI = document.createElement('li');
+      teamRoster.innerHTML = name;
+      
+      let teamMate = new RedTeammate ('blue', 'turtles');
+      
+      let selectedPlayer = document.getElementById(`element${id}`);
+      selectedPlayer.parentNode.removeChild(selectedPlayer);
   }
 
 
