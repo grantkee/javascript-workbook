@@ -9,37 +9,43 @@ const rl = readline.createInterface({
 
 let finalPhrase = [];
 
-function pigLatin(word) {
-  //the first thing I need to do is to create an array of just words. If the user puts in multiple words, this condition should separate these words and add them to an array I called twoWords
-  let twoWords = word.split(' ');
+function pigLatin( word ) {
+  //the first thing I need to do is to create an array of just seperateWords. If the user puts in multiple words, this condition should separate these words and add them to an array I called seperateWords
+  let seperateWords = word.split(' ');
 
-//once I have each word as an array, I'm going to create another array of just letters (for each word). Using a for loop, I'm going to cy 
-  for (let x=0; x < twoWords.length; x++){
-    let pigString = twoWords[x];
-    pigString = pigString.trim().toLowerCase().split('');
+//once I have each word as an array, I'm going to create another array of just seperateWords (for each word). Using a for loop
+  for (let x = 0; x < seperateWords.length; x++){
+    let letters = seperateWords[x];
+    letters = letters.trim().toLowerCase().split('');
+
 //breaks two words into two arrays
 
   let newWord = [];
   const vowels = ['a', 'e', 'i', 'o', 'u', 'y'];
 
-  if (vowels.includes(pigString[0])) {
-    newWord = pigString.join('') + 'yay';
+  if ( vowels.includes(letters[0]) ) {
+    newWord = letters.join('') + 'ay';
     finalPhrase.push(newWord);
+
   } else {
 
-    for (let i = 0; i < pigString.length; i++) {
+    for (let i = 0; i < letters.length; i++) {
 
-      if (! (vowels.includes(pigString[i]))){
-        newWord.push(pigString[i]);
+      if ( ! vowels.includes(letters[i]) ){
+        newWord.push(letters[i]);
       } else {
-        newWord = pigString.slice(i, pigString.length).concat(newWord).join('') + 'yay';
+        newWord = letters.slice(i, letters.length).concat(newWord).join('') + 'ay';
         break;    
       };
     };
-  finalPhrase.push(newWord);
+
+    finalPhrase.push(newWord);
+
   };
+
   return finalPhrase.join(' ');
-};
+
+  };
 };
 
 
